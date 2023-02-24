@@ -7,3 +7,5 @@ Thursday 02/23/23 Thought I'd get an earlier start on my homework.
 I have watched the first two videos. I will try to execute the "show your work" steps before asking for help. I find it helpful to see others troubleshooting steps as I get lost quickly.
 
 Per the class video, I'm going to check my spend for my acct. So far my spend is not over budget. I do have alerts in place for $10 and $20.
+
+I did take a look at my spend/credits available in GitPod.  I'm under the free tier and don't think I'm in danger of going over. 
