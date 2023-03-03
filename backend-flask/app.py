@@ -35,7 +35,6 @@ import logging
 from time import strftime
 
 #Rollbar
-###import os
 import rollbar
 import rollbar.contrib.flask
 from flask import got_request_exception
@@ -99,13 +98,12 @@ cors = CORS(
 #    return response
 
 #  Rollbar
-rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
 @app.before_first_request
 def init_rollbar():
     """init rollbar module"""
     rollbar.init(
         # access token
-        rollbar_access_token,
+        '8c9a5c73a3184595940cf9fd8a6a795d',
         # environment name
         'production',
         # server root directory, makes tracebacks prettier
@@ -119,10 +117,15 @@ def init_rollbar():
 
 
 # rollbar
-@app.route('/rollbar/test')
+##@app.route('/rollbar/test')
+##def rollbar_test():
+##    rollbar.report_message('Hello World!', 'warning')
+##    return "Hello World!"
+
+@app.route('/rollbar/dogs')
 def rollbar_test():
-    rollbar.report_message('Hello World!', 'warning')
-    return "Hello World!"
+    rollbar.report_message('I must pet all the dogs!', 'warning')
+    return "I must pet all the dogs! I miss my Reno!!"
 # end Rollbar
 
 @app.route("/api/message_groups", methods=['GET'])
