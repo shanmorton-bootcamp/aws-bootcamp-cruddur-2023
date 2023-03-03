@@ -21,3 +21,7 @@ I'm hoping that I the info I get from this bootcamp will allow me to have some b
 I had to go back over the video again to fix what wasn't working.  I am still not entirely sure what I did to correct my work but I think I'm in a good place after getting my xray to "work".  I was fully LOST when trying to implement a custom? trace? in one of the activities.  I honestly didn't complete that part b/c I didn't see the value, at this time.  
 The Xray video was a bit difficult to get through but I think I am done with it and can move to the next videos.
 
+03/03/23
+Got Rollbar working.  It took a little time and a gitpod restart to get it working.
+Still being exposed to this and not sure what to make of it. 
+
