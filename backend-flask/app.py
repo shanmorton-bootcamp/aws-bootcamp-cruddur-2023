@@ -35,11 +35,12 @@ import logging
 from time import strftime
 
 #Rollbar
-import os
+###import os
 import rollbar
 import rollbar.contrib.flask
 from flask import got_request_exception
 #end Rollbar
+
 
 
 #Cloudwatch logs
