@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 import os
+import sys
 
 from services.home_activities import *
 from services.notifications_activites import *
@@ -13,6 +14,7 @@ from services.message_groups import *
 from services.messages import *
 from services.create_message import *
 from services.show_activity import *
+from flask_awscognito import AWSCognitoAuthentication
 
 # HoneyComb tracing info
 from opentelemetry import trace
@@ -73,6 +75,9 @@ tracer = trace.get_tracer(__name__)
 #end Xray
 
 app = Flask(__name__)
+
+app.config['AWS_COGNITO_USER_POOL'] = os.getenv("AWS_COGNITO_USER_POOL_ID")
+app.config['AWS_COGNITO_USER_POOL_CLIENT_ID'] = os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID")
 #XRayMiddleware(app, xray_recorder)
 #HoneyComb
 FlaskInstrumentor().instrument_app(app)
@@ -84,8 +89,8 @@ origins = [frontend, backend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
-  expose_headers="location,link",
-  allow_headers="content-type,if-modified-since",
+  headers=['Content-Type', 'Authorization'], 
+  expose_headers='Authorization',
   methods="OPTIONS,GET,HEAD,POST"
 )
 
@@ -164,9 +169,17 @@ def data_create_message():
   return
 
 @app.route("/api/activities/home", methods=['GET'])
+@aws_auth.authentication_required
 def data_home():
+  #app.logger.debug("AUTH HEADER ****") ## seeing access token in log 
+  #app.logger.debug(
+  #  request.headers.get('Authorization')
+  #  )
   #data = HomeActivities.run(logger=LOGGER)
   data = HomeActivities.run()
+  claims = aws_auth.claims
+  app.logger.debug('claims')
+  app.logger.debug(claims)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
