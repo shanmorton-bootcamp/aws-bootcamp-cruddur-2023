@@ -14,7 +14,7 @@ from services.message_groups import *
 from services.messages import *
 from services.create_message import *
 from services.show_activity import *
-from flask_awscognito import AWSCognitoAuthentication
+from lib.cognito_jwt_token import CognitoJwtToken
 
 # HoneyComb tracing info
 from opentelemetry import trace
@@ -41,8 +41,6 @@ import rollbar
 import rollbar.contrib.flask
 from flask import got_request_exception
 #end Rollbar
-
-
 
 #Cloudwatch logs
 # Configuring Logger to Use CloudWatch
@@ -76,8 +74,11 @@ tracer = trace.get_tracer(__name__)
 
 app = Flask(__name__)
 
-app.config['AWS_COGNITO_USER_POOL'] = os.getenv("AWS_COGNITO_USER_POOL_ID")
-app.config['AWS_COGNITO_USER_POOL_CLIENT_ID'] = os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID")
+cognito_jwt_token = CognitoJwtToken(
+ user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
+ user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"), 
+ region=os.getenv("AWS_DEFAULT_REGION")
+)
 #XRayMiddleware(app, xray_recorder)
 #HoneyComb
 FlaskInstrumentor().instrument_app(app)
@@ -86,6 +87,7 @@ RequestsInstrumentor().instrument()
 frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
+
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
@@ -169,17 +171,27 @@ def data_create_message():
   return
 
 @app.route("/api/activities/home", methods=['GET'])
-@aws_auth.authentication_required
+
 def data_home():
   #app.logger.debug("AUTH HEADER ****") ## seeing access token in log 
   #app.logger.debug(
   #  request.headers.get('Authorization')
   #  )
   #data = HomeActivities.run(logger=LOGGER)
-  data = HomeActivities.run()
-  claims = aws_auth.claims
+  access_token = CognitoJwtToken.extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.token_service.verify(access_token)
+    #self.claims = self.token_service.claims
+    #g.cognito_claims = self.claims
+  except TokenVerifyError as e:
+    _ = request.data
+    abort(make_response(jsonify(message=str(e)), 401))
   app.logger.debug('claims')
   app.logger.debug(claims)
+
+  data = HomeActivities.run()
+  #claims = aws_auth.claims
+ 
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
