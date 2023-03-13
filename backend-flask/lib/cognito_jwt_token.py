@@ -13,7 +13,6 @@ class FlaskAWSCognitoError(Exception):
 class TokenVerifyError(Exception):
     pass
 
-@classmethod
 def extract_access_token(request_headers):
     access_token = None
     auth_header = request_headers.get("Authorization")
