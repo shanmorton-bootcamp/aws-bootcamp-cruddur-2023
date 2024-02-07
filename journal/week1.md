@@ -58,3 +58,19 @@ and you'll see Data come back.
 
 
 [PortOpenGettingData.jpg]
+
+
+Unset the env var for Frontend and backend URLs
+
+``` 
+unset FRONTEND_URL
+unset BACKEND_URL
+
+```
+Do make sure you are not in the backend-flask folder when you run the next command to build the docker image.
+
+``` 
+cd ../
+docker build -t  backend-flask ./backend-flask
+
+```
