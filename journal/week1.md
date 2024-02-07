@@ -30,3 +30,13 @@ EXPOSE ${PORT}
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
 
 ```
+
+After creating the docker file name making some notes,
+I ran the requirments.txt file to install some needed libraries.
+
+then ran the cmdn to run the docker container, to get the port started/open
+
+``` 
+python3 -m flask run --host=0.0.0.0 --port=4567
+
+```
