@@ -1,1 +1,32 @@
 # Week 1 — App Containerization
+
+I'm going through this bootcamp, again, on my own. 
+
+I am STUCK in desktop support and I need to move up and out.
+I think this will help me do that!
+
+## Week 1 — App Containerization
+https://www.youtube.com/watch?v=zJnNe5Nv4tE&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=19
+
+Starting again!  Here we go!!
+
+### New Dockerfile in backend-flask directory
+
+We'll create a new docker file for the backend part of our project
+
+```
+FROM python:3.10-slim-buster
+
+WORKDIR /backend-flask
+
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+COPY . .
+
+ENV FLASK_ENV=development
+
+EXPOSE ${PORT}
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
+
+```
