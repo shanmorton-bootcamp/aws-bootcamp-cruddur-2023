@@ -74,3 +74,5 @@ cd ../
 docker build -t  backend-flask ./backend-flask
 
 ```
+
+This work laptop is SO SLOW I'll have to go back to my own personal laptop to make this work.  Ugh!!!
