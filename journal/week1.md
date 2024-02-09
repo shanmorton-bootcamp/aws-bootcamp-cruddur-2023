@@ -146,3 +146,5 @@ networks:
 ```
 
 You can run a "docker compose up" if you right click on the file.  There are several options for action there as well.
+
+I'm having an issue with the front end not running. I can go back into the frontend and run the npm i, then restart my containers then it'll work.  Need to watch from about 1/2 way to the end again.
