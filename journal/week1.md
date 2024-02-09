@@ -76,3 +76,73 @@ docker build -t  backend-flask ./backend-flask
 ```
 
 This work laptop is SO SLOW I'll have to go back to my own personal laptop to make this work.  Ugh!!!
+
+02/08/12
+I was able to move to my own laptop that is much better quality and faster than my work laptop.
+
+I built the docker image and now I'll run the image/container using this cmd:
+
+```
+docker container run --rm -p 4567:4567 -d backend-flask
+```
+and I'll see it being active in side the docker panel.
+
+Run this docker cmd and set some ENV Vars:
+```
+docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-flask
+
+```
+
+Now to set up the FrontEnd @ 1:43:43 in Week 1 — App Containerization video
+
+Move to the Frontend folder and run an ``` npm i ``` to install node.
+
+Create a new file named Docker file in the frontend directory. 
+
+```
+FROM node:16.18
+
+ENV PORT=3000
+
+COPY . /frontend-react-js
+WORKDIR /frontend-react-js
+RUN npm install
+EXPOSE ${PORT}
+CMD ["npm", "start"]
+
+```
+
+Created a new file in the root of my project, docker-compose.yml
+
+```
+
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./backend-flask
+    ports:
+      - "4567:4567"
+    volumes:
+      - ./backend-flask:/backend-flask
+  frontend-react-js:
+    environment:
+      REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./frontend-react-js
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-react-js:/frontend-react-js
+
+# the name flag is a hack to change the default prepend folder
+# name when outputting the image names
+networks: 
+  internal-network:
+    driver: bridge
+    name: cruddur
+
+```
+
+You can run a "docker compose up" if you right click on the file.  There are several options for action there as well.
